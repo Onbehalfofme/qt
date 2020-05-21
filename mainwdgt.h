@@ -5,7 +5,10 @@
 
 #include "pressuremodel.h"
 #include "addeditpressure.h"
-
+enum COLUMNS
+{
+ TIME=0, SIS=1,DIS=2
+};
 namespace Ui {
 class MainWdgt;
 }
