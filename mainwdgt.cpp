@@ -1,6 +1,5 @@
 #include "mainwdgt.h"
 #include "ui_mainwdgt.h"
-#include "addeditpressure.h"
 
 
 MainWdgt::MainWdgt(QWidget *parent) :

@@ -174,7 +174,7 @@ bool PressureModel::loadFromFile(QString path)
         return false;
 }
 
-bool PressureModel::addRow(QTime time, int sistolic, int diastolic)
+bool PressureModel::appendRow(QTime time, int sistolic, int diastolic)
 {
     insertRow(rowCount()-1);
     pressures.last()
