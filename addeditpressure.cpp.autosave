@@ -19,13 +19,16 @@ void AddEditPressure::setAdd(){
     ui->sisP->clear();
     ui->diasP->clear();
     ui->timeCtrl->clear();
-    show()
-}
-void AddEditPressure::setEdit(){
-    ui->sisP->setText("aaaa");
-    ui->diasP->setText("aaaa");
-    ui->timeCtrl->setDate(QDate::fromString("10:00", "hh:mm"));
     show();
+}
+void AddEditPressure::setEdit(COLUMNS column, QVariant value){
+    switch(column){
+    case COLUMNS::DIS : ui->diasP->setText(value.toString());
+        break;
+    case COLUMNS::SIS: ui->sisP->setText(value.toString());
+        break;
+    case COLUMNS::TIME: ui->timeCtrl->setTime(value.toTime());
+    }
 }
 void AddEditPressure::cancel(){
     hide();

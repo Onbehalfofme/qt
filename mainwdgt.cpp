@@ -10,11 +10,20 @@ MainWdgt::MainWdgt(QWidget *parent) :
     ui->setupUi(this);
 
     ui->tblViewer->setModel(&model);
-    connect(ui->addRow, &QPushButton::clicked, &addEditPressure, &AddEditPressure::setAdd);
-    connect(ui->editRow, &QPushButton::clicked, &addEditPressure, &AddEditPressure::setEdit);
+    connect(ui->addRow, &QPushButton::clicked, this, &MainWdgt::setAdd);
+    connect(ui->editRow, &QPushButton::clicked, this, &MainWdgt::setEdit);
 }
 
 MainWdgt::~MainWdgt()
 {
     delete ui;
+}
+
+void MainWdgt::setAdd(){
+    addEditPressure.setAdd();
+}
+void MainWdgt::setEdit(){
+
+    model.index();
+
 }

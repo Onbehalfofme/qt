@@ -2,7 +2,7 @@
 #define ADDEDITPRESSURE_H
 
 #include <QDialog>
-
+#include <mainwdgt.h>
 namespace Ui {
 class AddEditPressure;
 }
@@ -15,7 +15,7 @@ public:
     explicit AddEditPressure(QWidget *parent = 0);
     ~AddEditPressure();
     void setAdd();
-    void setEdit();
+    void setEdit(COLUMNS column, QVariant value);
 
 public slots:
     void cancel();
