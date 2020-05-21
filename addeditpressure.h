@@ -15,6 +15,8 @@ public:
     explicit AddEditPressure(QWidget *parent = 0);
     ~AddEditPressure();
 
+public slots:
+    void setAdd();
 private:
     Ui::AddEditPressure *ui;
 };

@@ -12,3 +12,10 @@ AddEditPressure::~AddEditPressure()
 {
     delete ui;
 }
+
+void AddEditPressure::setAdd(){
+    ui->sisP->clear();
+    ui->diasP->clear();
+    ui->timeCtrl->clear();
+    show();
+}

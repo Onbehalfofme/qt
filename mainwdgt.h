@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "pressuremodel.h"
+#include "addeditpressure.h"
 
 namespace Ui {
 class MainWdgt;
@@ -20,6 +21,7 @@ public:
 private:
     Ui::MainWdgt *ui;
     PressureModel model;
+    AddEditPressure addEditPressure;
 };
 
 #endif // MAINWDGT_H
