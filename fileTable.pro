@@ -26,11 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwdgt.cpp \
-    pressuremodel.cpp
+    pressuremodel.cpp \
+    addeditpressure.cpp
 
 HEADERS += \
         mainwdgt.h \
-    pressuremodel.h
+    pressuremodel.h \
+    addeditpressure.h
 
 FORMS += \
-        mainwdgt.ui
+        mainwdgt.ui \
+    addeditpressure.ui
