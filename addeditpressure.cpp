@@ -15,6 +15,13 @@ AddEditPressure::~AddEditPressure()
     delete ui;
 }
 
+void AddEditPressure::fillByObj(const PressureModel::PressureAtTheMoment* obj)
+{
+    ui->sisP->setText(QString::number(obj->sistolic));
+    ui->diasP->setText(QString::number(obj->diastolic));
+    ui->timeCtrl->setTime(QTime(obj->hour, obj->minute));
+}
+
 void AddEditPressure::setAdd(){
     ui->sisP->clear();
     ui->diasP->clear();

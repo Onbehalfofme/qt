@@ -18,7 +18,8 @@ public:
     explicit MainWdgt(QWidget *parent = 0);
     ~MainWdgt();
 
-
+protected slots:
+    void editRow();
 
 private:
     Ui::MainWdgt *ui;

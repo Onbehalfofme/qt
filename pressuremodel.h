@@ -9,6 +9,9 @@ class PressureModel : public QAbstractTableModel
 {
     Q_OBJECT
 
+public:
+    explicit PressureModel(QObject *parent = nullptr);
+
     struct PressureAtTheMoment
     {
         int hour;
@@ -16,10 +19,6 @@ class PressureModel : public QAbstractTableModel
         int sistolic;
         int diastolic;
     };
-
-public:
-    explicit PressureModel(QObject *parent = nullptr);
-
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
@@ -36,6 +35,8 @@ public:
     bool loadFromFile(QString path);
     bool addRow(int row, QTime time, int sistolic, int diastolic);
     bool appendRow(QTime time, int sistolic, int diastolic);
+
+    const PressureAtTheMoment * getObjAtRow(int row) const;
 private:
     QLinkedList<PressureAtTheMoment*> pressures;
 };

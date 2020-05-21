@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "pressuremodel.h"
+
 namespace Ui {
 class AddEditPressure;
 }
@@ -15,6 +17,7 @@ public:
     explicit AddEditPressure(QWidget *parent = 0);
     ~AddEditPressure();
 
+    void fillByObj(const PressureModel::PressureAtTheMoment* obj);
 public slots:
     void setAdd();
     void setEdit();

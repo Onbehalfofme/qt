@@ -187,7 +187,15 @@ bool PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
 bool PressureModel::appendRow(QTime time, int sistolic, int diastolic)
 {
     addRow(rowCount(), time, sistolic, diastolic);
-
 }
+
+const PressureModel::PressureAtTheMoment *PressureModel::getObjAtRow(int row) const
+{
+    auto it = pressures.begin();
+    it=it+row;
+    return *it;
+}
+
+
 
 
