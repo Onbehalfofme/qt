@@ -35,11 +35,9 @@ public:
     bool saveToFile(QString path);
     bool loadFromFile(QString path);
     bool addRow(int row, QTime time, int sistolic, int diastolic);
-
+    bool appendRow(QTime time, int sistolic, int diastolic);
 private:
     QLinkedList<PressureAtTheMoment*> pressures;
-    QLinkedListIterator itByRow(int row);
-    QLinkedListIterator itAndObjByRow(int row, PressureAtTheMoment ** p);
 };
 
 #endif // PRESSUREMODEL_H

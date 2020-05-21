@@ -16,13 +16,13 @@ QVariant PressureModel::headerData(int section, Qt::Orientation orientation, int
     {
         switch(section)
         {
-            case 1:
+            case 0:
                 return QStringLiteral("Время");
             break;
-            case 2:
+            case 1:
                 return QStringLiteral("Сис");
             break;
-            case 3:
+            case 2:
                 return QStringLiteral("Дис");
             break;
         }
@@ -52,43 +52,29 @@ QVariant PressureModel::data(const QModelIndex &index, int role) const
     if(index.row() > rowCount())
         return QVariant();
 
+    auto it = pressures.begin();
+    it = it + index.row();
+    PressureAtTheMoment * rowP = *it;
 
-    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
-    PressureAtTheMoment * rowP = it.next(); //PressureAtTheMoment & че-т не удалось
-    int row = index.row();
-
-    while(it.hasNext() || (row!=0))
-    {
-        row--;
-        rowP = it.next();
-    }
-
-    switch(index.column())
-    {
+    if(role == Qt::DisplayRole)
+        switch(index.column())
+        {
+        case 0:
+            return QTime(rowP->hour, rowP->minute).toString("hh:mm");
         case 1:
-            if(role == Qt::DisplayRole)
-                return QTime(rowP->hour, rowP->minute).toString("hh:mm");
-            if(role == Qt::UserRole)
-        case 2:
             return rowP->sistolic;
-        case 3:
+        case 2:
             return rowP->diastolic;
-    }
+        }
     return QVariant();
 }
 
 bool PressureModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_UNUSED(role)
-    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
-    int row = index.row();
-    PressureAtTheMoment * newP = it.next();
-
-    while(it.hasNext() || (row!=0))
-    {
-        row--;
-        newP=it.next();
-    }
+    QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
+    it = it + index.row();
+    PressureAtTheMoment * newP = *it;
 
     switch(index.column())
     {
@@ -115,8 +101,10 @@ bool PressureModel::insertRows(int row, int count, const QModelIndex &parent)
 
     PressureAtTheMoment * newP = new PressureAtTheMoment;
 
-    auto it = itByRow(row);
-    pressures.insert(it,newP);
+    QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
+    it = it+row;
+    pressures.insert(it, newP);
+
 
     endInsertRows();
 }
@@ -124,6 +112,10 @@ bool PressureModel::insertRows(int row, int count, const QModelIndex &parent)
 bool PressureModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     beginRemoveRows(parent,row,row+count);
+
+    QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
+    it = it+row;
+    pressures.erase(it);
     //TODO написать удаление
     endRemoveRows();
 }
@@ -174,39 +166,28 @@ bool PressureModel::loadFromFile(QString path)
         return false;
 }
 
-bool PressureModel::addRow(QTime time, int sistolic, int diastolic)
+bool PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
 {
-    insertRow(rowCount()-1);
-    pressures.last()
-    setData()
-}
+    beginInsertRows(QModelIndex(),row,row+1);
 
-QLinkedListIterator PressureModel::itByRow(int row)
-{
-    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
-    PressureAtTheMoment * rowP = it.next(); //PressureAtTheMoment & че-т не удалось
-    int row = index.row();
+    PressureAtTheMoment * newP = new PressureAtTheMoment;
+    newP->hour = time.hour();
+    newP->minute = time.minute();
+    newP->sistolic = sistolic;
+    newP->diastolic = diastolic;
 
-    while(it.hasNext() || (row!=0))
-    {
-        row--;
-        rowP = it.next();
-    }
-    return it;
+    QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
+    it = it+row;
+    pressures.insert(it, newP);
+
+    endInsertRows();
 
 }
 
-QLinkedListIterator PressureModel::itAndObjByRow(int row, PressureModel::PressureAtTheMoment **p)
+bool PressureModel::appendRow(QTime time, int sistolic, int diastolic)
 {
-    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
-    *p = it.next(); //PressureAtTheMoment & че-т не удалось
-    int row = index.row();
+    addRow(rowCount(), time, sistolic, diastolic);
 
-    while(it.hasNext() || (row!=0))
-    {
-        row--;
-        *p = it.next();
-    }
-    return it;
 }
+
 
