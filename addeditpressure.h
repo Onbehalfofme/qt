@@ -17,6 +17,9 @@ public:
 
 public slots:
     void setAdd();
+    void setEdit();
+    void cancel();
+    void ok();
 private:
     Ui::AddEditPressure *ui;
 };

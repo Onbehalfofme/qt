@@ -18,6 +18,8 @@ public:
     explicit MainWdgt(QWidget *parent = 0);
     ~MainWdgt();
 
+
+
 private:
     Ui::MainWdgt *ui;
     PressureModel model;

@@ -6,6 +6,8 @@ AddEditPressure::AddEditPressure(QWidget *parent) :
     ui(new Ui::AddEditPressure)
 {
     ui->setupUi(this);
+    connect(ui->okBtn, &QPushButton::clicked, this, &AddEditPressure::ok);
+    connect(ui->cancelBtn, &QPushButton::clicked, this, &AddEditPressure::cancel);
 }
 
 AddEditPressure::~AddEditPressure()
@@ -18,4 +20,17 @@ void AddEditPressure::setAdd(){
     ui->diasP->clear();
     ui->timeCtrl->clear();
     show();
+}
+void AddEditPressure::setEdit(){
+    ui->sisP->setText("aaaa");
+    ui->diasP->setText("aaaa");
+    ui->timeCtrl->setDate(QDate::fromString("10:00", "hh:mm"));
+    show();
+}
+
+void AddEditPressure::cancel(){
+    hide();
+}
+void AddEditPressure::ok(){
+    hide();
 }
