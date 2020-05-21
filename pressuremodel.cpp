@@ -49,8 +49,8 @@ QVariant PressureModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
 
-    QLinkedListIterator<PressureAtTheMoment> it(pressures);
-    PressureAtTheMoment rowP = it.next(); //PressureAtTheMoment & че-т не удалось
+    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
+    PressureAtTheMoment * rowP = it.next(); //PressureAtTheMoment & че-т не удалось
     int row = index.row();
 
     while(it.hasNext() || (row!=0))
@@ -63,13 +63,41 @@ QVariant PressureModel::data(const QModelIndex &index, int role) const
     {
         case 1:
             if(role == Qt::DisplayRole)
-                return rowP.time.toString("hh:mm");
-            else
-                return rowP.time;
+                return QTime(rowP->hour, rowP->minute).toString("hh:mm");
         case 2:
-            return rowP.sistolic;
+            return rowP->sistolic;
         case 3:
-            return rowP.diastolic;
+            return rowP->diastolic;
     }
     return QVariant();
+}
+
+bool PressureModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    Q_UNUSED(role)
+    QLinkedListIterator<PressureAtTheMoment*> it(pressures);
+    int row = index.row();
+    PressureAtTheMoment * newP = it.next();
+
+    while(it.hasNext() || (row!=0))
+    {
+        row--;
+        newP=it.next();
+    }
+
+    switch(index.column())
+    {
+        case 1:
+            newP->hour = value.toTime().hour();
+            newP->minute = value.toTime().minute();
+        return true;
+        case 2:
+            newP->sistolic = value.toInt();
+        return true;
+        case 3:
+            newP->diastolic = value.toInt();
+        return true;;
+        default:
+         return false;
+    }
 }
