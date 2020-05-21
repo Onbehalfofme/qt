@@ -30,7 +30,13 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    bool insertRows(int row, int count, const QModelIndex &parent) override;
+    bool removeRows(int row, int count, const QModelIndex &parent) override;
 
+    bool saveToFile(QString path);
+    bool loadFromFile(QString path);
+    bool addRow(int row, QTime time, int sistolic, int diastolic);
+    bool appendRow(QTime time, int sistolic, int diastolic);
 private:
     QLinkedList<PressureAtTheMoment*> pressures;
 };
