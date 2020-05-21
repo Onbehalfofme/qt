@@ -17,6 +17,7 @@ class PressureModel : public QAbstractTableModel
         int diastolic;
     };
 
+
 public:
     explicit PressureModel(QObject *parent = nullptr);
 
