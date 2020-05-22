@@ -8,6 +8,11 @@ PressureModel::PressureModel(QObject *parent)
 {
 }
 
+PressureModel::~PressureModel()
+{
+    pressures.clear();
+}
+
 QVariant PressureModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(role)
@@ -111,12 +116,11 @@ bool PressureModel::insertRows(int row, int count, const QModelIndex &parent)
 
 bool PressureModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    beginRemoveRows(parent,row,row+count);
+    beginRemoveRows(parent,row,row+count-1);
 
     QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
     it = it+row;
     pressures.erase(it);
-    //TODO написать удаление
     endRemoveRows();
 }
 
@@ -166,9 +170,9 @@ bool PressureModel::loadFromFile(QString path)
         return false;
 }
 
-bool PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
+void PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
 {
-    beginInsertRows(QModelIndex(),row,row+1);
+    beginInsertRows(QModelIndex(),row,row);
 
     PressureAtTheMoment * newP = new PressureAtTheMoment;
     newP->hour = time.hour();
@@ -194,6 +198,17 @@ const PressureModel::PressureAtTheMoment *PressureModel::getObjAtRow(int row) co
     auto it = pressures.begin();
     it=it+row;
     return *it;
+}
+
+void PressureModel::editRow(int row, QTime time, int sistolic, int diastolic)
+{
+    auto it = pressures.begin();
+    it=it+row;
+    (*it)->hour = time.hour();
+    (*it)->minute = time.minute();
+    (*it)->sistolic = sistolic;
+    (*it)->diastolic = diastolic;
+    emit dataChanged(index(row,0),index(row,2));
 }
 
 

@@ -11,6 +11,7 @@ class PressureModel : public QAbstractTableModel
 
 public:
     explicit PressureModel(QObject *parent = nullptr);
+    ~PressureModel();
 
     struct PressureAtTheMoment
     {
@@ -33,10 +34,13 @@ public:
 
     bool saveToFile(QString path);
     bool loadFromFile(QString path);
-    bool addRow(int row, QTime time, int sistolic, int diastolic);
+
     bool appendRow(QTime time, int sistolic, int diastolic);
 
     const PressureAtTheMoment * getObjAtRow(int row) const;
+public slots:
+    void editRow(int row, QTime time, int sistolic, int diastolic);
+    void addRow(int row, QTime time, int sistolic, int diastolic);
 private:
     QLinkedList<PressureAtTheMoment*> pressures;
 };

@@ -8,6 +8,8 @@ AddEditPressure::AddEditPressure(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->okBtn, &QPushButton::clicked, this, &AddEditPressure::ok);
     connect(ui->cancelBtn, &QPushButton::clicked, this, &AddEditPressure::cancel);
+    editingRow = -1;
+    mode = MODE::ADD;
 }
 
 AddEditPressure::~AddEditPressure()
@@ -17,26 +19,40 @@ AddEditPressure::~AddEditPressure()
 
 void AddEditPressure::fillByObj(const PressureModel::PressureAtTheMoment* obj)
 {
-    ui->sisP->setText(QString::number(obj->sistolic));
-    ui->diasP->setText(QString::number(obj->diastolic));
+    ui->sisP->setValue(obj->sistolic);
+    ui->diasP->setValue(obj->diastolic);
     ui->timeCtrl->setTime(QTime(obj->hour, obj->minute));
 }
 
+void AddEditPressure::setEditingRow(int row)
+{
+    editingRow = row;
+}
+
 void AddEditPressure::setAdd(){
-    ui->sisP->clear();
-    ui->diasP->clear();
-    ui->timeCtrl->clear();
+    ui->sisP->setValue(110);
+    ui->diasP->setValue(70);
+    ui->timeCtrl->setTime(QTime::currentTime());
+    mode = MODE::ADD;
     show();
 }
-void AddEditPressure::setEdit(){
-    ui->sisP->setText("aaaa");
-    ui->diasP->setText("aaaa");
-    ui->timeCtrl->setDate(QDate::fromString("10:00", "hh:mm"));
-    show();
-}
+
 void AddEditPressure::cancel(){
     hide();
 }
 void AddEditPressure::ok(){
+    switch (mode) {
+    case MODE::ADD:
+        emit addObj(editingRow,ui->timeCtrl->time(), ui->sisP->value(), ui->diasP->value());
+        break;
+    case MODE::EDIT:
+        emit editObj(editingRow, ui->timeCtrl->time(), ui->sisP->value(), ui->diasP->value());
+        break;
+    }
     hide();
+}
+
+void AddEditPressure::setMode(const MODE &value)
+{
+    mode = value;
 }

@@ -23,6 +23,13 @@ public:
 
 protected slots:
     void editRow();
+    void addRow();
+private slots:
+    void on_deleteRow_clicked();
+
+    void on_saveBtn_clicked();
+
+    void on_loadBtn_clicked();
 
 private:
     Ui::MainWdgt *ui;
