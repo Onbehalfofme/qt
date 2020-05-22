@@ -2,15 +2,29 @@
 
 #include <QFile>
 #include <QDebug>
+#include <QMessageBox>
+#include <QtSql/QSqlQuery>
 
 PressureModel::PressureModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+        db = QSqlDatabase::addDatabase("QPSQL");
+        db.setHostName("localhost");
+        db.setPort(5432);
+        db.setDatabaseName("flightdb");
+        db.setUserName("postgres");
+        db.setPassword("postgres");
+        if(!db.open()){
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+            QObject::tr("Unable to establish a database connection.\n"
+                        "Click Cancel to exit."), QMessageBox::Cancel);
+        }
 }
 
 PressureModel::~PressureModel()
 {
     pressures.clear();
+    db.close();
 }
 
 QVariant PressureModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -223,6 +237,17 @@ void PressureModel::editRow(int row, QTime time, int sistolic, int diastolic)
     emit dataChanged(index(row,0),index(row,2));
 }
 
-
+bool PressureModel::getFromDb(){
+   QSqlQuery qry;
+   int row = 0;
+   qry.exec("select * from presure");
+   while(qry.next()){
+       QTime time =qry.value(0).toTime();
+       int sis =qry.value(1).toInt();
+       int dis = qry.value(2).toInt();
+       addRow(row, time, sis, dis);
+       row++;
+   }
+}
 
 

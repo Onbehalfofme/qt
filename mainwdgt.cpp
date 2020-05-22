@@ -14,6 +14,7 @@ MainWdgt::MainWdgt(QWidget *parent) :
     ui->tblViewer->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tblViewer->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+
     addEditPressure.setModal(true);
 
     connect(ui->addRow, &QPushButton::clicked, this, &MainWdgt::addRow);
@@ -67,12 +68,12 @@ void MainWdgt::on_deleteRow_clicked()
 
 void MainWdgt::on_saveBtn_clicked()
 {
-    QString _fileName = QFileDialog::getSaveFileName(0, tr("Сохранить таблицу как"), QString(), tr("Таблица (*.p)"));
+    QString _fileName = QFileDialog::getSaveFileName(0, tr("Сохранить таблицу как"), QString());
     model.saveToFile(_fileName);
 }
 
 void MainWdgt::on_loadBtn_clicked()
 {
-    QString _fileName = QFileDialog::getOpenFileName(0, tr("Загрузить таблицу"), QString(), tr("Таблица (*.p)"));
+    QString _fileName = QFileDialog::getOpenFileName(0, tr("Загрузить таблицу"), QString());
     model.loadFromFile(_fileName);
 }
