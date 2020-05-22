@@ -4,8 +4,7 @@
 #include <QAbstractTableModel>
 #include <QLinkedList>
 #include <QTime>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
+
 
 class PressureModel : public QAbstractTableModel
 {
@@ -14,7 +13,6 @@ class PressureModel : public QAbstractTableModel
 public:
     explicit PressureModel(QObject *parent = nullptr);
     ~PressureModel();
-    QSqlDatabase db;
 
     struct PressureAtTheMoment
     {

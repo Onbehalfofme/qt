@@ -22,10 +22,8 @@ MainWdgt::MainWdgt(QWidget *parent) :
 
     connect(&addEditPressure, &AddEditPressure::editObj, &model, &PressureModel::editRow);
     connect(&addEditPressure, &AddEditPressure::addObj, &model, &PressureModel::addRow);
+    model.getFromDb();
 
-    model.addRow(0,QTime(00,44),120,70);
-    model.addRow(1,QTime(02,24),130,10);
-    model.addRow(2,QTime(20,44),160,30);
 }
 
 MainWdgt::~MainWdgt()

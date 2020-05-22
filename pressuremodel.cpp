@@ -4,27 +4,18 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlDatabase>
 
 PressureModel::PressureModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-        db = QSqlDatabase::addDatabase("QPSQL");
-        db.setHostName("localhost");
-        db.setPort(5432);
-        db.setDatabaseName("flightdb");
-        db.setUserName("postgres");
-        db.setPassword("postgres");
-        if(!db.open()){
-        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
-            QObject::tr("Unable to establish a database connection.\n"
-                        "Click Cancel to exit."), QMessageBox::Cancel);
-        }
+
 }
 
 PressureModel::~PressureModel()
 {
     pressures.clear();
-    db.close();
+
 }
 
 QVariant PressureModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -131,10 +122,14 @@ bool PressureModel::insertRows(int row, int count, const QModelIndex &parent)
 bool PressureModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     beginRemoveRows(parent,row,row+count-1);
-
+    QSqlQuery query;
+    query.prepare("delete from pressure where time = ?");
+    query.addBindValue(index(row, 0));
+    query.exec();
     QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
     it = it+row;
     pressures.erase(it);
+    QSqlDatabase::database().commit();
     endRemoveRows();
 }
 
@@ -202,9 +197,14 @@ void PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
     QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
     it = it+row+1;
     pressures.insert(it, newP);
-
+    QSqlQuery query;
+    query.prepare("insert into pressure(time, sistolic, diastolic) values (? ? ?)");
+    query.addBindValue(time);
+    query.addBindValue(sistolic);
+    query.addBindValue(diastolic);
+    query.exec();
     endInsertRows();
-
+    QSqlDatabase::database().commit();
 }
 
 bool PressureModel::appendRow(QTime time, int sistolic, int diastolic)
@@ -234,10 +234,20 @@ void PressureModel::editRow(int row, QTime time, int sistolic, int diastolic)
     (*it)->minute = time.minute();
     (*it)->sistolic = sistolic;
     (*it)->diastolic = diastolic;
+    QSqlQuery query;
+    query.prepare("update pressure set  time = ?, sistolic = ?, diastolic =? where time == ?");
+    query.addBindValue(time);
+    query.addBindValue(sistolic);
+    query.addBindValue(diastolic);
+    query.addBindValue(index(row, 0));
+    query.exec();
+    QSqlDatabase::database().commit();
     emit dataChanged(index(row,0),index(row,2));
+
 }
 
-bool PressureModel::getFromDb(){
+bool PressureModel::getFromDb() {
+   QSqlDatabase::database("db");
    QSqlQuery qry;
    int row = 0;
    qry.exec("select * from presure");
@@ -248,6 +258,6 @@ bool PressureModel::getFromDb(){
        addRow(row, time, sis, dis);
        row++;
    }
-}
+
 
 
