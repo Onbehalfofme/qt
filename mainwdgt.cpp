@@ -1,6 +1,8 @@
 #include "mainwdgt.h"
 #include "ui_mainwdgt.h"
 
+#include <QFileDialog>
+
 
 MainWdgt::MainWdgt(QWidget *parent) :
     QWidget(parent),
@@ -65,10 +67,12 @@ void MainWdgt::on_deleteRow_clicked()
 
 void MainWdgt::on_saveBtn_clicked()
 {
-
+    QString _fileName = QFileDialog::getSaveFileName(0, tr("Сохранить таблицу как"), QString(), tr("Таблица (*.p)"));
+    model.saveToFile(_fileName);
 }
 
 void MainWdgt::on_loadBtn_clicked()
 {
-
+    QString _fileName = QFileDialog::getOpenFileName(0, tr("Загрузить таблицу"), QString(), tr("Таблица (*.p)"));
+    model.loadFromFile(_fileName);
 }

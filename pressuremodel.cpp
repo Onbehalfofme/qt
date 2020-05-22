@@ -132,9 +132,10 @@ bool PressureModel::saveToFile(QString path)
         unsigned char HEADER[4] = {187,170,221,221};
         file.write((char*)HEADER,4);
         QLinkedListIterator<PressureAtTheMoment*> it(pressures);
-        PressureAtTheMoment * newP = it.next();
+        PressureAtTheMoment * newP = nullptr;
         while(it.hasNext())
         {
+            newP=it.next();
             file.write((char*)newP, sizeof(PressureAtTheMoment));
         }
         return true;
@@ -148,21 +149,25 @@ bool PressureModel::loadFromFile(QString path)
     QFile file(path);
     if(file.open(QIODevice::ReadOnly))
     {
+        clear();
         unsigned char HEADER[4] = {187,170,221,221};//0xBBAADDDD
         unsigned char FILE_HEADER[4];
         file.read((char*)FILE_HEADER,4);
         for(int i=0;i<4;i++)
         {
             if(FILE_HEADER[i] != HEADER[i])
+            {
                 qDebug()<<"wrong file header";
                 return false;
+            }
         }
         while(!file.atEnd())
         {
             PressureAtTheMoment * newP = new PressureAtTheMoment;
             file.read((char*)newP, sizeof(PressureAtTheMoment));
-            pressures.append(newP);
-            emit dataChanged(index(pressures.size()-1,0),index(pressures.size()-1,2));
+            beginInsertRows(QModelIndex(),rowCount(),rowCount());
+                pressures.append(newP);
+            endInsertRows();
         }
         return true;
     }
@@ -181,7 +186,7 @@ void PressureModel::addRow(int row, QTime time, int sistolic, int diastolic)
     newP->diastolic = diastolic;
 
     QLinkedList<PressureAtTheMoment*>::iterator it = pressures.begin();
-    it = it+row;
+    it = it+row+1;
     pressures.insert(it, newP);
 
     endInsertRows();
@@ -198,6 +203,13 @@ const PressureModel::PressureAtTheMoment *PressureModel::getObjAtRow(int row) co
     auto it = pressures.begin();
     it=it+row;
     return *it;
+}
+
+void PressureModel::clear()
+{
+    beginRemoveRows(QModelIndex(),0,rowCount()-1);
+        pressures.clear();
+    endRemoveRows();
 }
 
 void PressureModel::editRow(int row, QTime time, int sistolic, int diastolic)

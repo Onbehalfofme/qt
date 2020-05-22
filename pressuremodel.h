@@ -38,6 +38,7 @@ public:
     bool appendRow(QTime time, int sistolic, int diastolic);
 
     const PressureAtTheMoment * getObjAtRow(int row) const;
+    void clear();
 public slots:
     void editRow(int row, QTime time, int sistolic, int diastolic);
     void addRow(int row, QTime time, int sistolic, int diastolic);
